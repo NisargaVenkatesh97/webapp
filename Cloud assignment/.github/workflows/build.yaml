@@ -3,11 +3,10 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
-    
     services:
       postgres:
         image: postgres
-      
+
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
@@ -20,14 +19,12 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-
     steps:
       - run: node --version
       - run: npm --version
       - uses: actions/checkout@v3
       - run: npm install
       - run: node server.js
-
       - name: Create Employees Table
         run: |
           psql -h localhost -U postgres -d postgres -c "CREATE TABLE Employees (
@@ -41,7 +38,4 @@ jobs:
         run: |
           psql -h localhost -U postgres -d postgres -c "INSERT INTO Employees (first_name, last_name, email, hire_date) VALUES
             ('John', 'Doe', 'john.doe@example.com', '2023-01-01'),
-            ('Jane', 'Smith', 'jane.smith@example.com', '2023-02-01');"      
-
-
-
+            ('Jane', 'Smith', 'jane.smith@example.com', '2023-02-01');"
