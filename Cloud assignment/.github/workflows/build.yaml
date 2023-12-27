@@ -3,11 +3,11 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
-    
+
     services:
       postgres:
         image: postgres
-      
+
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
@@ -39,6 +39,4 @@ jobs:
         run: |
           psql -h localhost -U postgres -d postgres -c "INSERT INTO Employees (first_name, last_name, email, hire_date) VALUES
             ('John', 'Doe', 'john.doe@example.com', '2023-01-01'),
-            ('Jane', 'Smith', 'jane.smith@example.com', '2023-02-01');"      
-
-
+            ('Jane', 'Smith', 'jane.smith@example.com', '2023-02-01');"
