@@ -3,9 +3,45 @@ jobs:
   build-node:
     runs-on: ubuntu-latest
     container: node:16
+    
+    services:
+      postgres:
+        image: postgres
+      
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_HOST: localhost
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - run: node --version
       - run: npm --version
       - uses: actions/checkout@v3
       - run: npm install
       - run: node server.js
+
+      - name: Create Employees Table
+        run: |
+          psql -h localhost -U postgres -d postgres -c "CREATE TABLE Employees (
+            employee_id SERIAL PRIMARY KEY,
+            first_name VARCHAR(50),
+            last_name VARCHAR(50),
+            email VARCHAR(100),
+            hire_date DATE
+          );"
+      - name: Insert Sample Data
+        run: |
+          psql -h localhost -U postgres -d postgres -c "INSERT INTO Employees (first_name, last_name, email, hire_date) VALUES
+            ('John', 'Doe', 'john.doe@example.com', '2023-01-01'),
+            ('Jane', 'Smith', 'jane.smith@example.com', '2023-02-01');"      
+
+
+
